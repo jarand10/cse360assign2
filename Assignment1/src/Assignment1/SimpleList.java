@@ -4,7 +4,7 @@
  *  Assignment 1
  */
 package Assignment1;
-
+import java.lang.Math;
 /*
  * The SimpleList class will instantiate an object of SimpleList. 
  * The class has two private instance variables; an integer array named
@@ -13,6 +13,7 @@ package Assignment1;
  * keep count of entries added. There are different methods in the class 
  * that will add, remove, search, return count and return toString.
  */
+
 public class SimpleList {
 	private int[] list;
 	private int count;
@@ -25,7 +26,8 @@ public class SimpleList {
 		list = new int[10];
 		count = 0;
 	}
-	
+	public static int increasedArraySize = 10;
+	public static int decreasedArraySize = 10;
 	/*
 	 * This function will add numbers into the list and shift accordingly.
 	 * It will also reflect the count of numbers in the list.
@@ -42,22 +44,50 @@ public class SimpleList {
 		}
 		else			// list is not empty.
 		{
-			// Create a temp array to handle the shifting of numbers.
-			int[] temporaryArray1 = new int[list.length];
-			/*
-			 * Copy the contents of the original list from position 1
-			 * to the end of the list and place it into the temp array.
-			 */
-			System.arraycopy(list, 0, temporaryArray1, 1, 9);
-			// Set first element of temp array to the new added number.
-			temporaryArray1[0] = num;
-			// Increment count if count is below 10. 
 			if (count < 10)
 			{
+				// Create a temp array to handle the shifting of numbers.
+				int[] temporaryArray1 = new int[list.length];
+				/*
+				 * Copy the contents of the original list from position 1
+				 * to the end of the list and place it into the temp array.
+				 */
+				System.arraycopy(list, 0, temporaryArray1, 1, 9);
+				// Set first element of temp array to the new added number.
+				temporaryArray1[0] = num;
+				// Increment count if count is below 10. 
 				count++;
+				// Finally, copy the temp array into the list object.
+				list = temporaryArray1.clone();
 			}
-			// Finally, copy the temp array into the list object.
-			list = temporaryArray1.clone();
+			else if(count == increasedArraySize) // check to see if array is full
+			{
+				// create a temporary array with 1 extra element.
+				int[] temporaryArray2 = new int[count + 1];
+				// copy list into temporary array.
+				System.arraycopy(list, 0, temporaryArray2, 1, count);
+				// set first element of temp array to incoming integer.
+				temporaryArray2[0] = num;
+				// calculate the percentage increase for new sized array.
+				float newArraySize = (float) (count * 0.50);
+				// round the new number down.
+				int roundNewSize = (int) Math.floor(newArraySize);
+				// set the global variable to the new size, so it can be used.
+				increasedArraySize = count + roundNewSize;
+				// allocate new space for the array, increase the count.
+				list = new int[count + roundNewSize];
+				count++;
+				// copy the temp array into list.
+				list = temporaryArray2.clone();
+			}
+			else	// this else block is to fill up remaining spaces of array.
+			{
+				int[] temporaryArray3 = new int[count + 1];
+				System.arraycopy(list, 0, temporaryArray3, 1, count);
+				temporaryArray3[0] = num;
+				count++;
+				list = temporaryArray3.clone();
+			}
 		}
 	}
 	
@@ -83,6 +113,21 @@ public class SimpleList {
 			}
 			// Decrement the count.
 			count--;
+			// check to see if the list is 25% empty.
+			float check = (float) (decreasedArraySize * 0.25);
+			// round down the check.
+			int roundDownCheck = (int) Math.floor(check);
+			// calculate the empty spaces.
+			int emptySpaces = decreasedArraySize - count;
+			if (emptySpaces > roundDownCheck)	// check to see if array is 25% empty.
+			{
+				// set the new decreased array size. copy original list.
+				decreasedArraySize -= roundDownCheck;
+				int[] temporaryArray1 = new int[decreasedArraySize];
+				System.arraycopy(list, 0, temporaryArray1, 0, decreasedArraySize);
+				list = new int[decreasedArraySize];
+				list = temporaryArray1.clone();
+			}
 		}
 	}
 	
