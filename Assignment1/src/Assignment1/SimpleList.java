@@ -1,7 +1,7 @@
 /*
  *  Author: Jesus Aranda
  *  Class ID: 165
- *  Assignment 1
+ *  Assignment 2
  */
 package Assignment1;
 import java.lang.Math;
@@ -26,8 +26,7 @@ public class SimpleList {
 		list = new int[10];
 		count = 0;
 	}
-	public static int increasedArraySize = 10;
-	public static int decreasedArraySize = 10;
+
 	/*
 	 * This function will add numbers into the list and shift accordingly.
 	 * It will also reflect the count of numbers in the list.
@@ -60,20 +59,21 @@ public class SimpleList {
 				// Finally, copy the temp array into the list object.
 				list = temporaryArray1.clone();
 			}
-			else if(count == increasedArraySize) // check to see if array is full
+			else if(count == list.length) // check to see if array is full
 			{
-				// create a temporary array with 1 extra element.
-				int[] temporaryArray2 = new int[count + 1];
-				// copy list into temporary array.
-				System.arraycopy(list, 0, temporaryArray2, 1, count);
-				// set first element of temp array to incoming integer.
-				temporaryArray2[0] = num;
 				// calculate the percentage increase for new sized array.
 				float newArraySize = (float) (count * 0.50);
 				// round the new number down.
 				int roundNewSize = (int) Math.floor(newArraySize);
 				// set the global variable to the new size, so it can be used.
-				increasedArraySize = count + roundNewSize;
+				//increasedArraySize = count + roundNewSize;
+				int check = count + roundNewSize;
+				// create a temporary array with 1 extra element.
+				int[] temporaryArray2 = new int[check];
+				// set first element of temp array to incoming integer.
+				temporaryArray2[0] = num;
+				// copy list into temporary array.
+				System.arraycopy(list, 0, temporaryArray2, 1, count);
 				// allocate new space for the array, increase the count.
 				list = new int[count + roundNewSize];
 				count++;
@@ -113,20 +113,23 @@ public class SimpleList {
 			}
 			// Decrement the count.
 			count--;
-			// check to see if the list is 25% empty.
-			float check = (float) (decreasedArraySize * 0.25);
-			// round down the check.
-			int roundDownCheck = (int) Math.floor(check);
-			// calculate the empty spaces.
-			int emptySpaces = decreasedArraySize - count;
-			if (emptySpaces > roundDownCheck)	// check to see if array is 25% empty.
+			if (count > 1)
 			{
-				// set the new decreased array size. copy original list.
-				decreasedArraySize -= roundDownCheck;
-				int[] temporaryArray1 = new int[decreasedArraySize];
-				System.arraycopy(list, 0, temporaryArray1, 0, decreasedArraySize);
-				list = new int[decreasedArraySize];
-				list = temporaryArray1.clone();
+				// check to see if the list is 25% empty.
+				float check = (float) (list.length * 0.25);
+				// round down the check.
+				int roundDownCheck = (int) Math.floor(check);
+				// calculate the empty spaces.
+				int emptySpaces = list.length - count;
+				if (emptySpaces > roundDownCheck)	// check to see if array is 25% empty.
+				{
+					// set the new decreased array size. copy original list.
+					int newListSize = list.length - roundDownCheck;
+					int[] tempList = new int[newListSize];
+					System.arraycopy(list, 0, tempList, 0, newListSize);
+					list = new int[newListSize];
+					list = tempList.clone();
+				}
 			}
 		}
 	}
@@ -188,5 +191,87 @@ public class SimpleList {
 			}
 		}
 		return position;
+	}
+	
+	/*
+	 * The append function will append an incoming integer to the list. If the 
+	 * list is full, then the function will allocate a 50% increase in the list
+	 * size.
+	 */
+	public void append(int number)
+	{
+		// first check if list is full.
+		if (count == list.length)
+		{
+			
+			// calculate new simple list size.
+			float arrayIncreaseBy = (float) (count * 0.50);
+			// round the new number down.
+			int roundArrayIncreaseBy = (int) Math.floor(arrayIncreaseBy);
+			// set the global variable to the new size, so it can be used.
+			int newArraySize = count + roundArrayIncreaseBy;
+			int[] tempList = new int[newArraySize];
+			// copy original list into tempList, and add new number at the end.
+			System.arraycopy(list, 0, tempList, 0, count);
+			tempList[count + 1] = number;
+			// copy the tempList into original list.
+			list = tempList.clone();
+			count++;
+		}
+		else	// the list is not full.
+		{
+			// append the new number to the end of the list.
+			list[count] = number;
+			count++;
+		}
+	}
+	/*
+	 * The first function returns the first element int the list. If the 
+	 * list is empty, then return -1;
+	 */
+	public int first()
+	{
+		int firstElement;
+		if (count == 0)
+		{
+			firstElement = -1;
+		}
+		else
+		{
+			firstElement = list[0];
+		}
+		return firstElement;
+	}
+	
+	/*
+	 * The last function returns the last element in the list. If the list
+	 * is empty, it will return -1.
+	 */
+	public int last()
+	{
+		int lastElement = 0;
+		if (count == 0)
+		{
+			lastElement = -1;
+		}
+		else
+		{
+			for(int iterate = 0; iterate < count; iterate++)
+			{
+				lastElement = list[iterate];
+			}
+		}
+		return lastElement;
+	}
+	
+	/*
+	 * The size function will return the number of possible locations in the 
+	 * list. 
+	 */
+	public int size()
+	{
+		int listLength = list.length;
+		int size = listLength - count;
+		return size;
 	}
 }
